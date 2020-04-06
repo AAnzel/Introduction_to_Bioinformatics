@@ -8,6 +8,6 @@ Master studies
 * Aleksandar Anžel 1025/2018
 
 ### Problem:
-* Dendogram analysis of distance matrix (acquired from [the article](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-13-174)) while using different metrics of the classical UPGMA algorithm.
+* Dendrogram analysis of distance matrix (acquired from [the article](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-13-174)) while using different metrics of the classical UPGMA algorithm.
 
 

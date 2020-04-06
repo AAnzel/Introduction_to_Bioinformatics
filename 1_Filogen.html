@@ -13017,45 +13017,6 @@ ul.typeahead-list  > li > a.pull-right {
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
-<style type="text/css">
-    
-/* Temporary definitions which will become obsolete with Notebook release 5.0 */
-.ansi-black-fg { color: #3E424D; }
-.ansi-black-bg { background-color: #3E424D; }
-.ansi-black-intense-fg { color: #282C36; }
-.ansi-black-intense-bg { background-color: #282C36; }
-.ansi-red-fg { color: #E75C58; }
-.ansi-red-bg { background-color: #E75C58; }
-.ansi-red-intense-fg { color: #B22B31; }
-.ansi-red-intense-bg { background-color: #B22B31; }
-.ansi-green-fg { color: #00A250; }
-.ansi-green-bg { background-color: #00A250; }
-.ansi-green-intense-fg { color: #007427; }
-.ansi-green-intense-bg { background-color: #007427; }
-.ansi-yellow-fg { color: #DDB62B; }
-.ansi-yellow-bg { background-color: #DDB62B; }
-.ansi-yellow-intense-fg { color: #B27D12; }
-.ansi-yellow-intense-bg { background-color: #B27D12; }
-.ansi-blue-fg { color: #208FFB; }
-.ansi-blue-bg { background-color: #208FFB; }
-.ansi-blue-intense-fg { color: #0065CA; }
-.ansi-blue-intense-bg { background-color: #0065CA; }
-.ansi-magenta-fg { color: #D160C4; }
-.ansi-magenta-bg { background-color: #D160C4; }
-.ansi-magenta-intense-fg { color: #A03196; }
-.ansi-magenta-intense-bg { background-color: #A03196; }
-.ansi-cyan-fg { color: #60C6C8; }
-.ansi-cyan-bg { background-color: #60C6C8; }
-.ansi-cyan-intense-fg { color: #258F8F; }
-.ansi-cyan-intense-bg { background-color: #258F8F; }
-.ansi-white-fg { color: #C5C1B4; }
-.ansi-white-bg { background-color: #C5C1B4; }
-.ansi-white-intense-fg { color: #A1A6B2; }
-.ansi-white-intense-bg { background-color: #A1A6B2; }
-
-.ansi-bold { font-weight: bold; }
-
-    </style>
 
 
 <style type="text/css">
@@ -13116,19 +13077,27 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="UPGMA-algoritam-sa-proizvoljnim-izborom-metrike"><center>UPGMA algoritam sa proizvoljnim izborom metrike</center><a class="anchor-link" href="#UPGMA-algoritam-sa-proizvoljnim-izborom-metrike">&#182;</a></h1>
+<h1 id="UPGMA-algorithm-with-varying-metrics"><center>UPGMA algorithm with varying metrics</center><a class="anchor-link" href="#UPGMA-algorithm-with-varying-metrics">&#182;</a></h1><h1 id="UPGMA-algoritam-sa-proizvoljnim-izborom-metrike"><center>UPGMA algoritam sa proizvoljnim izborom metrike</center><a class="anchor-link" href="#UPGMA-algoritam-sa-proizvoljnim-izborom-metrike">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Loading libraries:</p>
+<ol>
+<li>Numpy and Pandas necessary for efficient array and matrix manipulations</li>
+<li>Math for the math part</li>
+<li>Ast for parsing strings into lists of characters</li>
+<li>Scipy and Matplotlib for generating dendrograms</li>
+</ol>
 <p>Učitavanje odgovarajućih biblioteka:</p>
-
-<pre><code>1. Numpy i Pandas su potrebne zarad lakše manipulacije nizova i učitanih matrica rastojanja
-2. Math za lakše računanje složenih matematičkih operacija
-3. Ast za potrebe parsiranja stringova u liste
-4. Scipy i Matplotlib za iscrtavanje dendrograma</code></pre>
+<ol>
+<li>Numpy i Pandas su potrebne zarad lakše manipulacije nizova i učitanih matrica rastojanja</li>
+<li>Math za lakše računanje složenih matematičkih operacija</li>
+<li>Ast za potrebe parsiranja stringova u liste</li>
+<li>Scipy i Matplotlib za iscrtavanje dendrograma</li>
+</ol>
 
 </div>
 </div>
@@ -13142,7 +13111,7 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="k">import</span> <span class="n">dendrogram</span>
+<span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">dendrogram</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="o">%</span><span class="k">matplotlib</span> inline
@@ -13157,7 +13126,22 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Program kao osnovu koristi UPGMA implementaciju obrađenu na vežbama uz odgovarajuće modifikacije. Klaster (kao i na vežbama) predstavljamo u obliku klase.
+<p>Used UPGMA implementation is the same one as shown during course. Cluster is represented as Python class. Different metrics result in different clusters.
+Let's say that the number of elements in the first cluster is <em>n</em> and in the second cluster is <em>m</em>, and that there is a distance matrix named <strong>distance</strong> that defines similarity between each row and column.
+The metrics used are:</p>
+<ol>
+<li>Arithmetic mean (deafult choice of UPGMA):
+\begin{equation*} \frac{1}{n*m}\left( \sum_{i=1}^n \sum_{j=1}^m distance[i, j] \right) \end{equation*}</li>
+<li>Minkowski metric:
+\begin{equation*} \left(\sum_{i=1}^n \sum_{j=1}^m | distance[i, j] |^p\right)^{1/p} \end{equation*}</li>
+</ol>
+<p>Important:</p>
+
+<pre><code>1. For p=1 we have Manhattan distance.
+2. For p=2 we have Euclidean distance.
+3. When p-&gt;+inf we have Chebyshev distance:
+</code></pre>
+\begin{equation*} \lim_{p\to\infty}{(\sum_{i=1}^n \sum_{j=1}^m |distance [i,j]|^p)^{1/p}} = \max_{i=1, j=1}^{n,m} (|distance [i,j]|) \end{equation*}<p>Program kao osnovu koristi UPGMA implementaciju obrađenu na vežbama uz odgovarajuće modifikacije. Klaster (kao i na vežbama) predstavljamo u obliku klase.
 Algoritam počiva na implementiranju UPGMA algoritma uz pomoć različitih metrika (rastojanja) koje samim tim menjaju i oblike klastera.
 Neka su dva klastera kardinalnosti n i m respektivno i neka postoji matrica <strong>rastojanja</strong> koja definiše rastojanje (sličnost) između svake vrste i kolone (matrica je kvadratna a vrste i kolone odgovaraju organizmima). Metrike koje se koriste su:</p>
 
@@ -13182,13 +13166,13 @@ Neka su dva klastera kardinalnosti n i m respektivno i neka postoji matrica <str
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Klaster</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementi</span><span class="p">,</span> <span class="n">starost</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elementi</span><span class="p">,</span> <span class="n">starost</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elementi</span> <span class="o">=</span> <span class="n">elementi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">starost</span> <span class="o">=</span> <span class="n">starost</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">levo</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">desno</span> <span class="o">=</span> <span class="kc">None</span>
     
-    <span class="k">def</span> <span class="nf">__str__</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> : </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elementi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">starost</span><span class="p">))</span>
     
     <span class="k">def</span> <span class="nf">dodaj_levo</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
@@ -13252,6 +13236,7 @@ Neka su dva klastera kardinalnosti n i m respektivno i neka postoji matrica <str
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Function that finds clusters with minimal distance in given metrics and returns the indexes of those clusters and their distance</p>
 <p>Implementacija funkcije koja nalazi klastere na najmanjem rastojanju u odgovarajućoj metrici i vraća njihove indekse i odgovarajuće rastojanje.</p>
 
 </div>
@@ -13299,6 +13284,7 @@ Neka su dva klastera kardinalnosti n i m respektivno i neka postoji matrica <str
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Implementing UPGMA algorithm with slight modification. In order to use scipy function for dendrogram drawing, cluster classes should be saved in more adequate structure. Therefore, map <strong>mapa_klastera</strong> is used with cluster elements as keys <em>[a, b, c, ...]</em>.</p>
 <p>Implementacija UPGMA algoritma uz malu modifikaciju. Za potrebe crtanja dendrograma pomoću ugrađene funkcije iz scipy biblioteke, potrebno je rezultate koji se dobijaju u obliku klasa sačuvati u pogodniji oblik.
 U te svrhe se kreira <strong>mapa_klastera</strong> čiji ključevi predstavljaju niske oblika <em>[a, b, c...]</em> gde su elementi a, b i c zapravo elementi klastera kojeg ovaj ključ definiše a vrednosti koje odgovaraju ključu su oblika <em>(redni broj klastera, redni broj levog sina, redni broj desnog sina, rastojanje klastera od sinova)</em> pri čemu je rastojanje klastera od sinova definisano kao polovina rastojanja između sinova.
 Inicijalno, ova mapa sadrži klastere koji su jednočlani. Zatim se oni grupišu u veće klastere na osnovu dole navedenog algoritma.</p>
@@ -13359,6 +13345,7 @@ Inicijalno, ova mapa sadrži klastere koji su jednočlani. Zatim se oni grupišu
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Helper function which creates Linkage Matrix used for dendrogram drawing. More about usage on <strong>Link 1</strong> and <strong>Link 2</strong>.</p>
 <p>Linkage matrica (tj. matrica povezanosti) predstavlja reprezentaciju rezultata algoritma klasterovanja i koristi se kao ulaz bibliotečke funkcije <em>dendrogram</em> koja služi za iscrtavanje rezultata. Promenljiva <strong>mapa_klastera</strong> je kreirana upravo sa ciljem da se premosti različitost implementacija i omogući jednostavno kreiranje ove matrice. O samoj matrici se može više pročitati na linkovima:</p>
 <p><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.linkage.html">Link 1</a> (deo koji opisuje povratnu vrednost funkcije)</p>
 <p><a href="https://joernhees.de/blog/2015/08/26/scipy-hierarchical-clustering-and-dendrogram-tutorial/">Link 2</a> (deo na početku stranice)</p>
@@ -13458,6 +13445,7 @@ Inicijalno, ova mapa sadrži klastere koji su jednočlani. Zatim se oni grupišu
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Matrix used in this project is below.</p>
 <p>Matrica rastojanja korišćena u ovom primeru je dobijena na osnovu celih sekvenci β-globin (hemoglobin beta) gena preuzetih sa NCBI (<a href="http://www.ncbi.nlm.nih.gov">http://www.ncbi.nlm.nih.gov</a>). Matrica je kreirana na osnovu referentnog rada: <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-13-174">link</a></p>
 
 </div>
